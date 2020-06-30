@@ -45,9 +45,9 @@ _underscored_filenames = False
 _pa_recording_sink_name = "spotrec"
 _pa_max_volume = "65536"
 _recording_time_before_song = 0.2
-_recording_time_after_song = 2.0
-_playback_time_before_seeking_to_beginning = 4.5
-_shell_executable = "/bin/bash"  # Default: "/bin/sh"
+_recording_time_after_song = 2
+_playback_time_before_seeking_to_beginning = 2
+_shell_executable = "/bin/sh"  # Default: "/bin/sh"
 _shell_encoding = "utf-8"
 _ffmpeg_executable = "ffmpeg"  # Example: "/usr/bin/ffmpeg"
 
@@ -140,6 +140,7 @@ def handle_command_line():
                                                          "Default: \"" + _filename_pattern + "\"", default=_filename_pattern)
     parser.add_argument("-t", "--no-tmp-file", help="Do not use a temporary hidden file during recording", action="store_true", default= not _tmp_file)
     parser.add_argument("-u", "--underscored-filenames", help="Force the file names to have underscores instead of whitespaces", action="store_true", default=_underscored_filenames)
+    parser.add_argument("--recording-overscan", dest='overscan', help="Record for how much more time after a song in order to be sure to capture it entirely", default=1, type=float)
 
     args = parser.parse_args()
 
@@ -158,6 +159,8 @@ def handle_command_line():
     _tmp_file = not args.no_tmp_file
 
     _underscored_filenames = args.underscored_filenames
+
+    _recording_time_after_song = args.overscan
 
 
 def init_log():
